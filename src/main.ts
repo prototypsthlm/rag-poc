@@ -28,7 +28,6 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
     <div class="px-4 py-10 sm:px-6 lg:px-8 lg:py-6">
       <!-- Main area -->
       <p id="answer" class="text-gray-900 dark:text-white"></p>
-      <p id="answer-unstyled" class="text-gray-900 dark:text-white pt-20"></p>
     </div>
   </main>
 </div>
@@ -49,7 +48,6 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
 
 // Handle search form submission
 const searchForm = document.querySelector('form');
-const answerUnstyledElement = document.querySelector<HTMLParagraphElement>('#answer-unstyled');
 const answerElement = document.querySelector<HTMLParagraphElement>('#answer');
 
 searchForm?.addEventListener('submit', async (e) => {
@@ -102,11 +100,7 @@ searchForm?.addEventListener('submit', async (e) => {
     if (answerElement) {
       const answer = data.choices?.[0]?.message?.content || JSON.stringify(data);
       const markdownAnswer = await marked.parse(answer);
-      answerElement.innerHTML = `<strong>${query}</strong><br><br>${markdownAnswer}`;
-
-      if(answerUnstyledElement) 
-        answerUnstyledElement.innerHTML = answer; // For debugging: show raw answer
-
+      answerElement.innerHTML = `<p class="text-lg"><strong>${query}</strong></p><br><div class="prose dark:prose-invert max-w-none">${markdownAnswer}</div>`;
 
       // Clear the search box
       if (searchInput) searchInput.value = '';
