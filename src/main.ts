@@ -1,6 +1,15 @@
 import './style.css'
 import { marked } from 'marked'
 
+// Configuration
+const CONFIG = {
+  apiUrl: 'https://internal-rag-poc-open-ai-swd.openai.azure.com/openai/deployments',
+  apiVersion: '2024-02-15-preview',
+  searchEndpoint: 'https://internal-rag-poc-ai-search.search.windows.net',
+  indexName: 'rag-poc-w-metadata-2',
+  defaultModel: 'gpt-4o'
+} as const;
+
 document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
 
 
@@ -51,6 +60,13 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
 
 `
 
+// Helper functions
+function escapeHtml(text: string): string {
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
 // Types
 interface Chat {
   id: number;
@@ -71,18 +87,23 @@ const chatListElement = document.querySelector<HTMLDivElement>('#chat-list');
 function renderChatList() {
   if (!chatListElement) return;
 
-  chatListElement.innerHTML = chats.map(chat => `
-    <button
-      class="w-full text-left px-3 py-2 rounded-md text-sm ${
-        activeChat?.id === chat.id
-          ? 'bg-indigo-600 text-white'
-          : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
+  chatListElement.innerHTML = chats.map(chat => {
+    const truncatedQuestion = chat.question.length > 50
+      ? chat.question.substring(0, 50) + '...'
+      : chat.question;
+
+    return `
+      <button
+        class="w-full text-left px-3 py-2 rounded-md text-sm ${activeChat?.id === chat.id
+        ? 'bg-indigo-600 text-white'
+        : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
       }"
-      data-chat-id="${chat.id}"
-    >
-      ${chat.question.length > 50 ? chat.question.substring(0, 50) + '...' : chat.question}
-    </button>
-  `).join('');
+        data-chat-id="${chat.id}"
+      >
+        ${escapeHtml(truncatedQuestion)}
+      </button>
+    `;
+  }).join('');
 
   // Add click handlers
   chatListElement.querySelectorAll('button').forEach(button => {
@@ -104,7 +125,7 @@ async function renderActiveChat() {
   const markdownAnswer = await marked.parse(activeChat.answer);
   chatHistoryElement.innerHTML = `
     <div>
-      <p class="text-lg font-semibold text-gray-900 dark:text-white mb-4">${activeChat.question}</p>
+      <p class="text-lg font-semibold text-gray-900 dark:text-white mb-4">${escapeHtml(activeChat.question)}</p>
       <div class="prose dark:prose-invert max-w-none">${markdownAnswer}</div>
     </div>
   `;
@@ -116,44 +137,19 @@ searchForm?.addEventListener('submit', async (e) => {
   const searchInput = document.querySelector<HTMLInputElement>('input[name="search"]');
   const modelSelect = document.querySelector<HTMLSelectElement>('#model-select');
   const query = searchInput?.value;
-  const model = modelSelect?.value || 'gpt-4o';
+  const model = modelSelect?.value || CONFIG.defaultModel;
 
   if (!query) return;
 
   try {
     // Update UI to show loading state
-    if (chatHistoryElement) chatHistoryElement.innerHTML = '<p class="text-gray-500 dark:text-gray-400">Loading...</p>';
+    if (chatHistoryElement) chatHistoryElement.innerHTML = '<p class="text-gray-500 dark:text-gray-400">Laddar...</p>';
 
     // Make API call
-    const apiUrl = `https://internal-rag-poc-open-ai-swd.openai.azure.com/openai/deployments/${model}/chat/completions?api-version=2024-02-15-preview`;
-    const response = await fetch(apiUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'api-key': import.meta.env.VITE_OPENAI_API_KEY
-      },
-      body: JSON.stringify({
-        "messages": [
-          {
-            "role": "user",
-            "content": query
-          }
-        ],
-        "data_sources": [
-          {
-            "type": "azure_search",
-            "parameters": {
-              "endpoint": "https://internal-rag-poc-ai-search.search.windows.net",
-              "index_name": "rag-poc",
-              "authentication": {
-                "type": "api_key",
-                "key": import.meta.env.VITE_AZURE_SEARCH_API_KEY
-              }
-            }
-          }
-        ]
-      })
-    });
+    const apiUrl = `${CONFIG.apiUrl}/${model}/chat/completions?api-version=${CONFIG.apiVersion}`;
+
+    const response = await getResponse(query, apiUrl);
+
     const data = await response.json();
 
     // Create new chat
@@ -180,3 +176,52 @@ searchForm?.addEventListener('submit', async (e) => {
     }
   }
 });
+
+async function getResponse(query: string, apiUrl: string) {
+  return await fetch(apiUrl, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'api-key': import.meta.env.VITE_OPENAI_API_KEY
+    },
+    body: JSON.stringify({
+      messages: [
+        {
+          "role": "system",
+          "content": `Use the provided sources.
+
+                      Each source contains metadata field "group".
+
+                      If group = oldLaw → include it in section "Old Law".
+                      If group = newLaw → include it in section "New Law".
+
+                      Always produce both sections if information exists.
+                    `
+        },
+        {
+          "role": "user",
+          "content": query
+        }
+      ],
+      data_sources: [
+        {
+          type: "azure_search",
+          parameters: {
+            endpoint: CONFIG.searchEndpoint,
+            index_name: CONFIG.indexName,
+            filter: "group/any(g: search.in(g, 'oldLaw,newLaw', ','))",
+            authentication: {
+              type: "api_key",
+              key: import.meta.env.VITE_AZURE_SEARCH_API_KEY
+            },
+            fields_mapping: {
+              content_fields: ["chunk"],
+              metadata_fields: ["group"]
+            },
+            top_n_documents: 8
+          }
+        }
+      ]
+    })
+  });
+}
