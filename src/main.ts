@@ -22,7 +22,7 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
 
 <div class="lg:pl-20">
   <div class="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-x-4 border-b border-gray-200 bg-white px-4 shadow-xs sm:gap-x-6 sm:px-6 lg:px-8 dark:border-white/10 dark:bg-gray-900 dark:shadow-none dark:before:pointer-events-none dark:before:absolute dark:before:inset-0 dark:before:bg-black/10">
-   
+
     <div class="flex flex-1 gap-x-4 self-stretch lg:gap-x-6">
       <form action="#" method="GET" class="grid flex-1 grid-cols-1">
         <input name="search" placeholder="Sök" aria-label="Search" class="col-start-1 row-start-1 block size-full bg-white pl-8 text-base text-gray-900 outline-hidden placeholder:text-gray-400 sm:text-sm/6 dark:bg-gray-900 dark:text-white dark:placeholder:text-gray-500" />
@@ -52,6 +52,54 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
     </select>
   </div>
 
+  <fieldset class="mb-6">
+    <legend class="block text-sm/6 font-semibold text-gray-900 dark:text-white mb-4">Filter groups</legend>
+    <div class="space-y-5">
+      <div class="flex gap-3">
+        <div class="flex h-6 shrink-0 items-center">
+          <div class="group grid size-4 grid-cols-1">
+            <input id="filter-law" type="checkbox" name="filter-law" value="law" checked class="col-start-1 row-start-1 appearance-none rounded-sm border border-gray-300 bg-white checked:border-indigo-600 checked:bg-indigo-600 indeterminate:border-indigo-600 indeterminate:bg-indigo-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:border-gray-300 disabled:bg-gray-100 disabled:checked:bg-gray-100 dark:border-white/10 dark:bg-white/5 dark:checked:border-indigo-500 dark:checked:bg-indigo-500 dark:indeterminate:border-indigo-500 dark:indeterminate:bg-indigo-500 dark:focus-visible:outline-indigo-500 dark:disabled:border-white/5 dark:disabled:bg-white/10 dark:disabled:checked:bg-white/10 forced-colors:appearance-auto" />
+            <svg viewBox="0 0 14 14" fill="none" class="pointer-events-none col-start-1 row-start-1 size-3.5 self-center justify-self-center stroke-white group-has-disabled:stroke-gray-950/25 dark:group-has-disabled:stroke-white/25">
+              <path d="M3 8L6 11L11 3.5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="opacity-0 group-has-checked:opacity-100" />
+              <path d="M3 7H11" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="opacity-0 group-has-indeterminate:opacity-100" />
+            </svg>
+          </div>
+        </div>
+        <div class="text-sm/6">
+          <label for="filter-law" class="font-medium text-gray-900 dark:text-white">Law</label>
+        </div>
+      </div>
+      <div class="flex gap-3">
+        <div class="flex h-6 shrink-0 items-center">
+          <div class="group grid size-4 grid-cols-1">
+            <input id="filter-oldRules" type="checkbox" name="filter-oldRules" value="oldRules" checked class="col-start-1 row-start-1 appearance-none rounded-sm border border-gray-300 bg-white checked:border-indigo-600 checked:bg-indigo-600 indeterminate:border-indigo-600 indeterminate:bg-indigo-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:border-gray-300 disabled:bg-gray-100 disabled:checked:bg-gray-100 dark:border-white/10 dark:bg-white/5 dark:checked:border-indigo-500 dark:checked:bg-indigo-500 dark:indeterminate:border-indigo-500 dark:indeterminate:bg-indigo-500 dark:focus-visible:outline-indigo-500 dark:disabled:border-white/5 dark:disabled:bg-white/10 dark:disabled:checked:bg-white/10 forced-colors:appearance-auto" />
+            <svg viewBox="0 0 14 14" fill="none" class="pointer-events-none col-start-1 row-start-1 size-3.5 self-center justify-self-center stroke-white group-has-disabled:stroke-gray-950/25 dark:group-has-disabled:stroke-white/25">
+              <path d="M3 8L6 11L11 3.5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="opacity-0 group-has-checked:opacity-100" />
+              <path d="M3 7H11" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="opacity-0 group-has-indeterminate:opacity-100" />
+            </svg>
+          </div>
+        </div>
+        <div class="text-sm/6">
+          <label for="filter-oldRules" class="font-medium text-gray-900 dark:text-white">Old Rules</label>
+        </div>
+      </div>
+      <div class="flex gap-3">
+        <div class="flex h-6 shrink-0 items-center">
+          <div class="group grid size-4 grid-cols-1">
+            <input id="filter-newRules" type="checkbox" name="filter-newRules" value="newRules" checked class="col-start-1 row-start-1 appearance-none rounded-sm border border-gray-300 bg-white checked:border-indigo-600 checked:bg-indigo-600 indeterminate:border-indigo-600 indeterminate:bg-indigo-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:border-gray-300 disabled:bg-gray-100 disabled:checked:bg-gray-100 dark:border-white/10 dark:bg-white/5 dark:checked:border-indigo-500 dark:checked:bg-indigo-500 dark:indeterminate:border-indigo-500 dark:indeterminate:bg-indigo-500 dark:focus-visible:outline-indigo-500 dark:disabled:border-white/5 dark:disabled:bg-white/10 dark:disabled:checked:bg-white/10 forced-colors:appearance-auto" />
+            <svg viewBox="0 0 14 14" fill="none" class="pointer-events-none col-start-1 row-start-1 size-3.5 self-center justify-self-center stroke-white group-has-disabled:stroke-gray-950/25 dark:group-has-disabled:stroke-white/25">
+              <path d="M3 8L6 11L11 3.5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="opacity-0 group-has-checked:opacity-100" />
+              <path d="M3 7H11" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="opacity-0 group-has-indeterminate:opacity-100" />
+            </svg>
+          </div>
+        </div>
+        <div class="text-sm/6">
+          <label for="filter-newRules" class="font-medium text-gray-900 dark:text-white">New Rules</label>
+        </div>
+      </div>
+    </div>
+  </fieldset>
+
   <div>
     <h3 class="text-sm font-semibold text-gray-900 dark:text-white mb-3">Tidigare frågor</h3>
     <div id="chat-list" class="space-y-2"></div>
@@ -73,6 +121,7 @@ interface Chat {
   question: string;
   answer: string;
   timestamp: Date;
+  groups: string[];
 }
 
 // State
@@ -123,9 +172,21 @@ async function renderActiveChat() {
   if (!chatHistoryElement || !activeChat) return;
 
   const markdownAnswer = await marked.parse(activeChat.answer);
+
+  const groupLabels: Record<string, string> = {
+    law: 'Law',
+    oldRules: 'Old Rules',
+    newRules: 'New Rules'
+  };
+
+  const groupBadges = activeChat.groups.map(group =>
+    `<span class="inline-flex items-center rounded-md bg-indigo-50 px-2 py-1 text-xs font-medium text-indigo-700 ring-1 ring-inset ring-indigo-700/10 dark:bg-indigo-400/10 dark:text-indigo-400 dark:ring-indigo-400/30">${escapeHtml(groupLabels[group] || group)}</span>`
+  ).join(' ');
+
   chatHistoryElement.innerHTML = `
     <div>
-      <p class="text-lg font-semibold text-gray-900 dark:text-white mb-4">${escapeHtml(activeChat.question)}</p>
+      <p class="text-lg font-semibold text-gray-900 dark:text-white mb-2">${escapeHtml(activeChat.question)}</p>
+      <div class="flex gap-2 mb-4">${groupBadges}</div>
       <div class="prose dark:prose-invert max-w-none">${markdownAnswer}</div>
     </div>
   `;
@@ -145,6 +206,15 @@ searchForm?.addEventListener('submit', async (e) => {
     // Update UI to show loading state
     if (chatHistoryElement) chatHistoryElement.innerHTML = '<p class="text-gray-500 dark:text-gray-400">Laddar...</p>';
 
+    // Get selected groups from checkboxes
+    const selectedGroups: string[] = [];
+    const checkboxes = document.querySelectorAll<HTMLInputElement>('input[type="checkbox"][id^="filter-"]');
+    checkboxes.forEach(checkbox => {
+      if (checkbox.checked) {
+        selectedGroups.push(checkbox.value);
+      }
+    });
+
     // Make API call
     const apiUrl = `${CONFIG.apiUrl}/${model}/chat/completions?api-version=${CONFIG.apiVersion}`;
 
@@ -158,7 +228,8 @@ searchForm?.addEventListener('submit', async (e) => {
       id: Date.now(),
       question: query,
       answer: answer,
-      timestamp: new Date()
+      timestamp: new Date(),
+      groups: selectedGroups
     };
 
     chats.unshift(newChat); // Add to beginning
@@ -178,6 +249,20 @@ searchForm?.addEventListener('submit', async (e) => {
 });
 
 async function getResponse(query: string, apiUrl: string) {
+  // Get selected groups from checkboxes
+  const selectedGroups: string[] = [];
+  const checkboxes = document.querySelectorAll<HTMLInputElement>('input[type="checkbox"][id^="filter-"]');
+  checkboxes.forEach(checkbox => {
+    if (checkbox.checked) {
+      selectedGroups.push(checkbox.value);
+    }
+  });
+
+  // Build filter string
+  const filterString = selectedGroups.length > 0
+    ? `group/any(g: search.in(g, '${selectedGroups.join(',')}', ','))`
+    : undefined;
+
   return await fetch(apiUrl, {
     method: 'POST',
     headers: {
@@ -192,10 +277,11 @@ async function getResponse(query: string, apiUrl: string) {
 
                       Each source contains metadata field "group".
 
-                      If group = oldLaw → include it in section "Old Law".
-                      If group = newLaw → include it in section "New Law".
+                      If group = law → include it in the section "Law".
+                      If group = oldRules → include it in section "Old Rules".
+                      If group = newRules → include it in section "New Rules".
 
-                      Always produce both sections if information exists.
+                      Always produce all sections if information exists.
                     `
         },
         {
@@ -209,7 +295,7 @@ async function getResponse(query: string, apiUrl: string) {
           parameters: {
             endpoint: CONFIG.searchEndpoint,
             index_name: CONFIG.indexName,
-            filter: "group/any(g: search.in(g, 'oldLaw,newLaw', ','))",
+            ...(filterString && { filter: filterString }),
             authentication: {
               type: "api_key",
               key: import.meta.env.VITE_AZURE_SEARCH_API_KEY
