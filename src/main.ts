@@ -315,68 +315,121 @@ async function getResponse(query: string, apiUrl: string) {
 async function getResponseSections(query: string, searchApiUrl: string) {
   const indexApiUrl = "https://internal-rag-poc-ai-search.search.windows.net/indexes/rag-poc-w-metadata-2/docs/search?api-version=2024-03-01-preview";
 
-  const responseLaw = await fetch(indexApiUrl, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'api-key': import.meta.env.VITE_AZURE_SEARCH_API_KEY
-    },
-    body: JSON.stringify({
-      "search": query,
-      "filter": "group/any(g: g eq 'law')",
-      "top": 4
-    })
+  // Get selected groups from checkboxes
+  const selectedGroups: string[] = [];
+  const checkboxes = document.querySelectorAll<HTMLInputElement>('input[type="checkbox"][id^="filter-"]');
+  checkboxes.forEach(checkbox => {
+    if (checkbox.checked) {
+      selectedGroups.push(checkbox.value);
+    }
   });
 
-  const dataLaw = await responseLaw.json();
-  const answerLaw = dataLaw.value?.map((doc: any) => ({
-    title: doc.title,
-    chunk: doc.chunk,
-    group: doc.group
-  })) || [];
-  console.log("Answer Law:", answerLaw);
-
-  const responseOldRules = await fetch(indexApiUrl, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'api-key': import.meta.env.VITE_AZURE_SEARCH_API_KEY
+  const messages: any[] = [
+    {
+      "role": "system",
+      "content": "Answer using ONLY the provided sources. Structure the answer into sections. One section per data source",
     },
-    body: JSON.stringify({
-      "search": query,
-      "filter": "group/any(g: g eq 'oldRules')",
-      "top": 4
-    })
-  });
+    {
+      "role": "user",
+      "content": query
+    }
+  ];
+  
 
-  const dataOldRules = await responseOldRules.json();
-  const answerOldRules = dataOldRules.value?.map((doc: any) => ({
-    title: doc.title,
-    chunk: doc.chunk,
-    group: doc.group
-  })) || [];
-  console.log("Answer Old Rules:", answerOldRules);
+  // Only fetch and add Law section if checkbox is selected
+  if (selectedGroups.includes('law')) {
+    const responseLaw = await fetch(indexApiUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'api-key': import.meta.env.VITE_AZURE_SEARCH_API_KEY
+      },
+      body: JSON.stringify({
+        "search": query,
+        "filter": "group/any(g: g eq 'law')",
+        "top": 4
+      })
+    });
 
-  const responseNewRules = await fetch(indexApiUrl, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'api-key': import.meta.env.VITE_AZURE_SEARCH_API_KEY
-    },
-    body: JSON.stringify({
-      "search": query,
-      "filter": "group/any(g: g eq 'newRules')",
-      "top": 4
-    })
-  });
+    const dataLaw = await responseLaw.json();
+    const answerLaw = dataLaw.value?.map((doc: any) => ({
+      title: doc.title,
+      chunk: doc.chunk,
+      group: doc.group
+    })) || [];
 
-  const dataNewRules = await responseNewRules.json();
-  const answerNewRules = dataNewRules.value?.map((doc: any) => ({
-    title: doc.title,
-    chunk: doc.chunk,
-    group: doc.group
-  })) || [];
-  console.log("Answer New Rules:", answerNewRules);
+    // Only add section if there is data
+    if (answerLaw.length > 0) {
+      messages.push({
+        "role": "assistant",
+        "content": "Law Sources:\n\n" + JSON.stringify(answerLaw)
+      });
+    }
+  }
+
+  // Only fetch and add Old Rules section if checkbox is selected
+  if (selectedGroups.includes('oldRules')) {
+    const responseOldRules = await fetch(indexApiUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'api-key': import.meta.env.VITE_AZURE_SEARCH_API_KEY
+      },
+      body: JSON.stringify({
+        "search": query,
+        "filter": "group/any(g: g eq 'oldRules')",
+        "top": 4
+      })
+    });
+
+    const dataOldRules = await responseOldRules.json();
+    const answerOldRules = dataOldRules.value?.map((doc: any) => ({
+      title: doc.title,
+      chunk: doc.chunk,
+      group: doc.group
+    })) || [];
+
+    // Only add section if there is data
+    if (answerOldRules.length > 0) {
+      messages.push({
+        "role": "assistant",
+        "content": "Old Rules Sources:\n\n" + JSON.stringify(answerOldRules)
+      });
+    }
+  }
+
+  // Only fetch and add New Rules section if checkbox is selected
+  if (selectedGroups.includes('newRules')) {
+    const responseNewRules = await fetch(indexApiUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'api-key': import.meta.env.VITE_AZURE_SEARCH_API_KEY
+      },
+      body: JSON.stringify({
+        "search": query,
+        "filter": "group/any(g: g eq 'newRules')",
+        "top": 4
+      })
+    });
+
+    const dataNewRules = await responseNewRules.json();
+    const answerNewRules = dataNewRules.value?.map((doc: any) => ({
+      title: doc.title,
+      chunk: doc.chunk,
+      group: doc.group
+    })) || [];
+
+    // Only add section if there is data
+    if (answerNewRules.length > 0) {
+      messages.push({
+        "role": "assistant",
+        "content": "New Rules Sources:\n\n" + JSON.stringify(answerNewRules)
+      });
+    }
+  }
+
+  console.log("Final Messages to API:", messages);
 
   return await fetch(searchApiUrl, {
     method: 'POST',
@@ -385,27 +438,7 @@ async function getResponseSections(query: string, searchApiUrl: string) {
       'api-key': import.meta.env.VITE_OPENAI_API_KEY
     },
     body: JSON.stringify({
-      "messages": [
-        {
-          "role": "system",
-          "content": "Answer using the provided sources. Structure the answer into three sections: Law, Old Rules, and New Rules."
-        },
-        {
-          "role": "user",
-          "content": query
-        },
-        {
-          "role": "assistant",
-          "content": "Law Sources:\n\n" + answerLaw
-        },
-        {
-          "role": "assistant",
-          "content": "Old Rules Sources:\n\n" + answerOldRules
-        },
-        {
-          "role": "assistant",
-          "content": "New Rules Sources:\n\n" + answerNewRules
-        }],
+      "messages": messages
     })
   });
 
