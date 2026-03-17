@@ -12,6 +12,90 @@ const CONFIG = {
 
 document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
 
+<!-- Mobile sidebar overlay -->
+<div id="sidebar-overlay" class="relative z-50 lg:hidden hidden" role="dialog" aria-modal="true">
+  <div class="fixed inset-0 bg-gray-900/80 transition-opacity duration-300 opacity-0" id="sidebar-backdrop"></div>
+  <div class="fixed inset-0 flex">
+    <div class="relative mr-16 flex w-full max-w-xs flex-1 transition duration-300 ease-in-out -translate-x-full" id="sidebar-panel">
+      <div class="absolute left-full top-0 flex w-16 justify-center pt-5">
+        <button type="button" class="-m-2.5 p-2.5" id="close-sidebar">
+          <span class="sr-only">Close sidebar</span>
+          <svg class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+      <div class="flex grow flex-col gap-y-5 overflow-y-auto bg-gray-900 px-6 pb-4">
+        <div class="flex h-16 shrink-0 items-center">
+          <img class="h-8 w-auto" src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=500" alt="Your Company">
+        </div>
+        <nav class="flex flex-1 flex-col">
+          <div class="mb-6">
+            <label for="model-select-mobile" class="block text-sm/6 font-medium text-white">
+              Model
+            </label>
+            <select id="model-select-mobile" name="model" class="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 bg-white text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm/6">
+              <option value="gpt-4o">gpt-4o</option>
+            </select>
+          </div>
+
+          <fieldset class="mb-6">
+            <legend class="block text-sm/6 font-semibold text-white mb-4">Filter groups</legend>
+            <div class="space-y-5">
+              <div class="flex gap-3">
+                <div class="flex h-6 shrink-0 items-center">
+                  <div class="group grid size-4 grid-cols-1">
+                    <input id="filter-law-mobile" type="checkbox" name="filter-law" value="law" checked class="col-start-1 row-start-1 appearance-none rounded-sm border border-gray-300 bg-white checked:border-indigo-600 checked:bg-indigo-600 indeterminate:border-indigo-600 indeterminate:bg-indigo-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:border-gray-300 disabled:bg-gray-100 disabled:checked:bg-gray-100 dark:border-white/10 dark:bg-white/5 dark:checked:border-indigo-500 dark:checked:bg-indigo-500 dark:indeterminate:border-indigo-500 dark:indeterminate:bg-indigo-500 dark:focus-visible:outline-indigo-500 dark:disabled:border-white/5 dark:disabled:bg-white/10 dark:disabled:checked:bg-white/10 forced-colors:appearance-auto" />
+                    <svg viewBox="0 0 14 14" fill="none" class="pointer-events-none col-start-1 row-start-1 size-3.5 self-center justify-self-center stroke-white group-has-disabled:stroke-gray-950/25 dark:group-has-disabled:stroke-white/25">
+                      <path d="M3 8L6 11L11 3.5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="opacity-0 group-has-checked:opacity-100" />
+                      <path d="M3 7H11" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="opacity-0 group-has-indeterminate:opacity-100" />
+                    </svg>
+                  </div>
+                </div>
+                <div class="text-sm/6">
+                  <label for="filter-law-mobile" class="font-medium text-white">Law</label>
+                </div>
+              </div>
+              <div class="flex gap-3">
+                <div class="flex h-6 shrink-0 items-center">
+                  <div class="group grid size-4 grid-cols-1">
+                    <input id="filter-oldRules-mobile" type="checkbox" name="filter-oldRules" value="oldRules" checked class="col-start-1 row-start-1 appearance-none rounded-sm border border-gray-300 bg-white checked:border-indigo-600 checked:bg-indigo-600 indeterminate:border-indigo-600 indeterminate:bg-indigo-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:border-gray-300 disabled:bg-gray-100 disabled:checked:bg-gray-100 dark:border-white/10 dark:bg-white/5 dark:checked:border-indigo-500 dark:checked:bg-indigo-500 dark:indeterminate:border-indigo-500 dark:indeterminate:bg-indigo-500 dark:focus-visible:outline-indigo-500 dark:disabled:border-white/5 dark:disabled:bg-white/10 dark:disabled:checked:bg-white/10 forced-colors:appearance-auto" />
+                    <svg viewBox="0 0 14 14" fill="none" class="pointer-events-none col-start-1 row-start-1 size-3.5 self-center justify-self-center stroke-white group-has-disabled:stroke-gray-950/25 dark:group-has-disabled:stroke-white/25">
+                      <path d="M3 8L6 11L11 3.5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="opacity-0 group-has-checked:opacity-100" />
+                      <path d="M3 7H11" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="opacity-0 group-has-indeterminate:opacity-100" />
+                    </svg>
+                  </div>
+                </div>
+                <div class="text-sm/6">
+                  <label for="filter-oldRules-mobile" class="font-medium text-white">Old Rules</label>
+                </div>
+              </div>
+              <div class="flex gap-3">
+                <div class="flex h-6 shrink-0 items-center">
+                  <div class="group grid size-4 grid-cols-1">
+                    <input id="filter-newRules-mobile" type="checkbox" name="filter-newRules" value="newRules" checked class="col-start-1 row-start-1 appearance-none rounded-sm border border-gray-300 bg-white checked:border-indigo-600 checked:bg-indigo-600 indeterminate:border-indigo-600 indeterminate:bg-indigo-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:border-gray-300 disabled:bg-gray-100 disabled:checked:bg-gray-100 dark:border-white/10 dark:bg-white/5 dark:checked:border-indigo-500 dark:checked:bg-indigo-500 dark:indeterminate:border-indigo-500 dark:indeterminate:bg-indigo-500 dark:focus-visible:outline-indigo-500 dark:disabled:border-white/5 dark:disabled:bg-white/10 dark:disabled:checked:bg-white/10 forced-colors:appearance-auto" />
+                    <svg viewBox="0 0 14 14" fill="none" class="pointer-events-none col-start-1 row-start-1 size-3.5 self-center justify-self-center stroke-white group-has-disabled:stroke-gray-950/25 dark:group-has-disabled:stroke-white/25">
+                      <path d="M3 8L6 11L11 3.5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="opacity-0 group-has-checked:opacity-100" />
+                      <path d="M3 7H11" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="opacity-0 group-has-indeterminate:opacity-100" />
+                    </svg>
+                  </div>
+                </div>
+                <div class="text-sm/6">
+                  <label for="filter-newRules-mobile" class="font-medium text-white">New Rules</label>
+                </div>
+              </div>
+            </div>
+          </fieldset>
+
+          <div>
+            <h3 class="text-sm font-semibold text-white mb-3">Tidigare frågor</h3>
+            <div id="chat-list-mobile" class="space-y-2"></div>
+          </div>
+        </nav>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- Static sidebar for desktop -->
 <div class="hidden lg:fixed lg:inset-y-0 lg:left-0 lg:z-50 lg:block lg:w-96 lg:overflow-y-auto lg:bg-gray-900 lg:pb-4 dark:before:pointer-events-none dark:before:absolute dark:before:inset-0 dark:before:border-r dark:before:border-white/10 dark:before:bg-black/10">
@@ -87,6 +171,12 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
 
 <div class="lg:pl-96">
   <div class="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-x-4 border-b border-gray-200 bg-white px-4 shadow-xs sm:gap-x-6 sm:px-6 lg:px-8 dark:border-white/10 dark:bg-gray-900 dark:shadow-none dark:before:pointer-events-none dark:before:absolute dark:before:inset-0 dark:before:bg-black/10">
+    <button type="button" class="-m-2.5 p-2.5 text-gray-700 lg:hidden" id="open-sidebar">
+      <span class="sr-only">Open sidebar</span>
+      <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+      </svg>
+    </button>
 
     <div class="flex flex-1 gap-x-4 self-stretch lg:gap-x-6">
       <form action="#" method="GET" class="grid flex-1 grid-cols-1">
@@ -129,15 +219,57 @@ interface Chat {
 let chats: Chat[] = [];
 let activeChat: Chat | null = null;
 
+// Sidebar toggle functionality
+const openSidebarBtn = document.querySelector('#open-sidebar');
+const closeSidebarBtn = document.querySelector('#close-sidebar');
+const sidebarOverlay = document.querySelector('#sidebar-overlay');
+const sidebarBackdrop = document.querySelector('#sidebar-backdrop');
+const sidebarPanel = document.querySelector('#sidebar-panel');
+
+function openSidebar() {
+  sidebarOverlay?.classList.remove('hidden');
+  setTimeout(() => {
+    sidebarBackdrop?.classList.remove('opacity-0');
+    sidebarBackdrop?.classList.add('opacity-100');
+    sidebarPanel?.classList.remove('-translate-x-full');
+    sidebarPanel?.classList.add('translate-x-0');
+  }, 10);
+}
+
+function closeSidebar() {
+  sidebarBackdrop?.classList.remove('opacity-100');
+  sidebarBackdrop?.classList.add('opacity-0');
+  sidebarPanel?.classList.remove('translate-x-0');
+  sidebarPanel?.classList.add('-translate-x-full');
+  setTimeout(() => {
+    sidebarOverlay?.classList.add('hidden');
+  }, 300);
+}
+
+openSidebarBtn?.addEventListener('click', openSidebar);
+closeSidebarBtn?.addEventListener('click', closeSidebar);
+sidebarBackdrop?.addEventListener('click', closeSidebar);
+
+// Sync mobile and desktop selects
+const modelSelect = document.querySelector<HTMLSelectElement>('#model-select');
+const modelSelectMobile = document.querySelector<HTMLSelectElement>('#model-select-mobile');
+
+modelSelect?.addEventListener('change', () => {
+  if (modelSelectMobile) modelSelectMobile.value = modelSelect.value;
+});
+
+modelSelectMobile?.addEventListener('change', () => {
+  if (modelSelect) modelSelect.value = modelSelectMobile.value;
+});
+
 // Handle search form submission
 const searchForm = document.querySelector('form');
 const chatHistoryElement = document.querySelector<HTMLDivElement>('#chat-history');
 const chatListElement = document.querySelector<HTMLDivElement>('#chat-list');
+const chatListElementMobile = document.querySelector<HTMLDivElement>('#chat-list-mobile');
 
 function renderChatList() {
-  if (!chatListElement) return;
-
-  chatListElement.innerHTML = chats.map(chat => {
+  const chatListHTML = chats.map(chat => {
     const truncatedQuestion = chat.question.length > 50
       ? chat.question.substring(0, 50) + '...'
       : chat.question;
@@ -155,8 +287,12 @@ function renderChatList() {
     `;
   }).join('');
 
-  // Add click handlers
-  chatListElement.querySelectorAll('button').forEach(button => {
+  // Render to both desktop and mobile
+  if (chatListElement) chatListElement.innerHTML = chatListHTML;
+  if (chatListElementMobile) chatListElementMobile.innerHTML = chatListHTML;
+
+  // Add click handlers for desktop
+  chatListElement?.querySelectorAll('button').forEach(button => {
     button.addEventListener('click', () => {
       const chatId = parseInt(button.dataset.chatId || '0');
       const chat = chats.find(c => c.id === chatId);
@@ -164,6 +300,20 @@ function renderChatList() {
         activeChat = chat;
         renderChatList();
         renderActiveChat();
+      }
+    });
+  });
+
+  // Add click handlers for mobile
+  chatListElementMobile?.querySelectorAll('button').forEach(button => {
+    button.addEventListener('click', () => {
+      const chatId = parseInt(button.dataset.chatId || '0');
+      const chat = chats.find(c => c.id === chatId);
+      if (chat) {
+        activeChat = chat;
+        renderChatList();
+        renderActiveChat();
+        closeSidebar(); // Close sidebar when selecting a chat on mobile
       }
     });
   });
