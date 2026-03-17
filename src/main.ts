@@ -218,7 +218,7 @@ searchForm?.addEventListener('submit', async (e) => {
     // Make API call
     const apiUrl = `${CONFIG.apiUrl}/${model}/chat/completions?api-version=${CONFIG.apiVersion}`;
 
-    const response = await getResponse(query, apiUrl);
+    const response = await getResponseSections(query, apiUrl);
 
     const data = await response.json();
 
@@ -310,4 +310,103 @@ async function getResponse(query: string, apiUrl: string) {
       ]
     })
   });
+}
+
+async function getResponseSections(query: string, searchApiUrl: string) {
+  const indexApiUrl = "https://internal-rag-poc-ai-search.search.windows.net/indexes/rag-poc-w-metadata-2/docs/search?api-version=2024-03-01-preview";
+
+  const responseLaw = await fetch(indexApiUrl, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'api-key': import.meta.env.VITE_AZURE_SEARCH_API_KEY
+    },
+    body: JSON.stringify({
+      "search": query,
+      "filter": "group/any(g: g eq 'law')",
+      "top": 4
+    })
+  });
+
+  const dataLaw = await responseLaw.json();
+  const answerLaw = dataLaw.value?.map((doc: any) => ({
+    title: doc.title,
+    chunk: doc.chunk,
+    group: doc.group
+  })) || [];
+  console.log("Answer Law:", answerLaw);
+
+  const responseOldRules = await fetch(indexApiUrl, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'api-key': import.meta.env.VITE_AZURE_SEARCH_API_KEY
+    },
+    body: JSON.stringify({
+      "search": query,
+      "filter": "group/any(g: g eq 'oldRules')",
+      "top": 4
+    })
+  });
+
+  const dataOldRules = await responseOldRules.json();
+  const answerOldRules = dataOldRules.value?.map((doc: any) => ({
+    title: doc.title,
+    chunk: doc.chunk,
+    group: doc.group
+  })) || [];
+  console.log("Answer Old Rules:", answerOldRules);
+
+  const responseNewRules = await fetch(indexApiUrl, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'api-key': import.meta.env.VITE_AZURE_SEARCH_API_KEY
+    },
+    body: JSON.stringify({
+      "search": query,
+      "filter": "group/any(g: g eq 'newRules')",
+      "top": 4
+    })
+  });
+
+  const dataNewRules = await responseNewRules.json();
+  const answerNewRules = dataNewRules.value?.map((doc: any) => ({
+    title: doc.title,
+    chunk: doc.chunk,
+    group: doc.group
+  })) || [];
+  console.log("Answer New Rules:", answerNewRules);
+
+  return await fetch(searchApiUrl, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'api-key': import.meta.env.VITE_OPENAI_API_KEY
+    },
+    body: JSON.stringify({
+      "messages": [
+        {
+          "role": "system",
+          "content": "Answer using the provided sources. Structure the answer into three sections: Law, Old Rules, and New Rules."
+        },
+        {
+          "role": "user",
+          "content": query
+        },
+        {
+          "role": "assistant",
+          "content": "Law Sources:\n\n" + answerLaw
+        },
+        {
+          "role": "assistant",
+          "content": "Old Rules Sources:\n\n" + answerOldRules
+        },
+        {
+          "role": "assistant",
+          "content": "New Rules Sources:\n\n" + answerNewRules
+        }],
+    })
+  });
+
 }
