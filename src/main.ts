@@ -14,13 +14,78 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
 
 
 <!-- Static sidebar for desktop -->
-<div class="hidden lg:fixed lg:inset-y-0 lg:left-0 lg:z-50 lg:block lg:w-20 lg:overflow-y-auto lg:bg-gray-900 lg:pb-4 dark:before:pointer-events-none dark:before:absolute dark:before:inset-0 dark:before:border-r dark:before:border-white/10 dark:before:bg-black/10">
-  <div class="relative flex h-16 shrink-0 items-center justify-center">
+<div class="hidden lg:fixed lg:inset-y-0 lg:left-0 lg:z-50 lg:block lg:w-96 lg:overflow-y-auto lg:bg-gray-900 lg:pb-4 dark:before:pointer-events-none dark:before:absolute dark:before:inset-0 dark:before:border-r dark:before:border-white/10 dark:before:bg-black/10">
+  <div class="relative flex h-16 shrink-0 items-center pl-6">
     <img src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=500" alt="Your Company" class="h-8 w-auto" />
+  </div>
+
+  <!-- Left panel content inside dark bar -->
+  <div class="px-4 py-6 sm:px-6 lg:px-8">
+    <div class="mb-6">
+      <label for="model-select" class="block text-sm/6 font-medium text-white">
+        Model
+      </label>
+      <select id="model-select" name="model" class="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 bg-white text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm/6">
+        <option value="gpt-4o">gpt-4o</option>
+      </select>
+    </div>
+
+    <fieldset class="mb-6">
+      <legend class="block text-sm/6 font-semibold text-white mb-4">Filter groups</legend>
+      <div class="space-y-5">
+        <div class="flex gap-3">
+          <div class="flex h-6 shrink-0 items-center">
+            <div class="group grid size-4 grid-cols-1">
+              <input id="filter-law" type="checkbox" name="filter-law" value="law" checked class="col-start-1 row-start-1 appearance-none rounded-sm border border-gray-300 bg-white checked:border-indigo-600 checked:bg-indigo-600 indeterminate:border-indigo-600 indeterminate:bg-indigo-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:border-gray-300 disabled:bg-gray-100 disabled:checked:bg-gray-100 dark:border-white/10 dark:bg-white/5 dark:checked:border-indigo-500 dark:checked:bg-indigo-500 dark:indeterminate:border-indigo-500 dark:indeterminate:bg-indigo-500 dark:focus-visible:outline-indigo-500 dark:disabled:border-white/5 dark:disabled:bg-white/10 dark:disabled:checked:bg-white/10 forced-colors:appearance-auto" />
+              <svg viewBox="0 0 14 14" fill="none" class="pointer-events-none col-start-1 row-start-1 size-3.5 self-center justify-self-center stroke-white group-has-disabled:stroke-gray-950/25 dark:group-has-disabled:stroke-white/25">
+                <path d="M3 8L6 11L11 3.5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="opacity-0 group-has-checked:opacity-100" />
+                <path d="M3 7H11" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="opacity-0 group-has-indeterminate:opacity-100" />
+              </svg>
+            </div>
+          </div>
+          <div class="text-sm/6">
+            <label for="filter-law" class="font-medium text-white">Law</label>
+          </div>
+        </div>
+        <div class="flex gap-3">
+          <div class="flex h-6 shrink-0 items-center">
+            <div class="group grid size-4 grid-cols-1">
+              <input id="filter-oldRules" type="checkbox" name="filter-oldRules" value="oldRules" checked class="col-start-1 row-start-1 appearance-none rounded-sm border border-gray-300 bg-white checked:border-indigo-600 checked:bg-indigo-600 indeterminate:border-indigo-600 indeterminate:bg-indigo-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:border-gray-300 disabled:bg-gray-100 disabled:checked:bg-gray-100 dark:border-white/10 dark:bg-white/5 dark:checked:border-indigo-500 dark:checked:bg-indigo-500 dark:indeterminate:border-indigo-500 dark:indeterminate:bg-indigo-500 dark:focus-visible:outline-indigo-500 dark:disabled:border-white/5 dark:disabled:bg-white/10 dark:disabled:checked:bg-white/10 forced-colors:appearance-auto" />
+              <svg viewBox="0 0 14 14" fill="none" class="pointer-events-none col-start-1 row-start-1 size-3.5 self-center justify-self-center stroke-white group-has-disabled:stroke-gray-950/25 dark:group-has-disabled:stroke-white/25">
+                <path d="M3 8L6 11L11 3.5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="opacity-0 group-has-checked:opacity-100" />
+                <path d="M3 7H11" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="opacity-0 group-has-indeterminate:opacity-100" />
+              </svg>
+            </div>
+          </div>
+          <div class="text-sm/6">
+            <label for="filter-oldRules" class="font-medium text-white">Old Rules</label>
+          </div>
+        </div>
+        <div class="flex gap-3">
+          <div class="flex h-6 shrink-0 items-center">
+            <div class="group grid size-4 grid-cols-1">
+              <input id="filter-newRules" type="checkbox" name="filter-newRules" value="newRules" checked class="col-start-1 row-start-1 appearance-none rounded-sm border border-gray-300 bg-white checked:border-indigo-600 checked:bg-indigo-600 indeterminate:border-indigo-600 indeterminate:bg-indigo-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:border-gray-300 disabled:bg-gray-100 disabled:checked:bg-gray-100 dark:border-white/10 dark:bg-white/5 dark:checked:border-indigo-500 dark:checked:bg-indigo-500 dark:indeterminate:border-indigo-500 dark:indeterminate:bg-indigo-500 dark:focus-visible:outline-indigo-500 dark:disabled:border-white/5 dark:disabled:bg-white/10 dark:disabled:checked:bg-white/10 forced-colors:appearance-auto" />
+              <svg viewBox="0 0 14 14" fill="none" class="pointer-events-none col-start-1 row-start-1 size-3.5 self-center justify-self-center stroke-white group-has-disabled:stroke-gray-950/25 dark:group-has-disabled:stroke-white/25">
+                <path d="M3 8L6 11L11 3.5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="opacity-0 group-has-checked:opacity-100" />
+                <path d="M3 7H11" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="opacity-0 group-has-indeterminate:opacity-100" />
+              </svg>
+            </div>
+          </div>
+          <div class="text-sm/6">
+            <label for="filter-newRules" class="font-medium text-white">New Rules</label>
+          </div>
+        </div>
+      </div>
+    </fieldset>
+
+    <div>
+      <h3 class="text-sm font-semibold text-white mb-3">Tidigare frågor</h3>
+      <div id="chat-list" class="space-y-2"></div>
+    </div>
   </div>
 </div>
 
-<div class="lg:pl-20">
+<div class="lg:pl-96">
   <div class="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-x-4 border-b border-gray-200 bg-white px-4 shadow-xs sm:gap-x-6 sm:px-6 lg:px-8 dark:border-white/10 dark:bg-gray-900 dark:shadow-none dark:before:pointer-events-none dark:before:absolute dark:before:inset-0 dark:before:bg-black/10">
 
     <div class="flex flex-1 gap-x-4 self-stretch lg:gap-x-6">
@@ -33,7 +98,7 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
     </div>
   </div>
 
-  <main class="xl:pl-96">
+  <main>
     <div class="px-4 py-10 sm:px-6 lg:px-8 lg:py-6">
       <!-- Main area -->
       <div id="chat-history" class="space-y-6"></div>
@@ -41,70 +106,6 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
   </main>
 </div>
 
-<aside class="fixed top-16 bottom-0 left-20 hidden w-96 overflow-y-auto border-r border-gray-200 px-4 py-6 sm:px-6 lg:px-8 xl:block dark:border-white/10">
-  <!-- Secondary column (hidden on smaller screens) -->
-  <div class="mb-6">
-    <label for="model-select" class="block text-sm/6 font-medium text-gray-900 dark:text-white">
-      Model
-    </label>
-    <select id="model-select" name="model" class="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm/6 dark:bg-gray-800 dark:text-white dark:ring-gray-700">
-      <option value="gpt-4o">gpt-4o</option>
-    </select>
-  </div>
-
-  <fieldset class="mb-6">
-    <legend class="block text-sm/6 font-semibold text-gray-900 dark:text-white mb-4">Filter groups</legend>
-    <div class="space-y-5">
-      <div class="flex gap-3">
-        <div class="flex h-6 shrink-0 items-center">
-          <div class="group grid size-4 grid-cols-1">
-            <input id="filter-law" type="checkbox" name="filter-law" value="law" checked class="col-start-1 row-start-1 appearance-none rounded-sm border border-gray-300 bg-white checked:border-indigo-600 checked:bg-indigo-600 indeterminate:border-indigo-600 indeterminate:bg-indigo-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:border-gray-300 disabled:bg-gray-100 disabled:checked:bg-gray-100 dark:border-white/10 dark:bg-white/5 dark:checked:border-indigo-500 dark:checked:bg-indigo-500 dark:indeterminate:border-indigo-500 dark:indeterminate:bg-indigo-500 dark:focus-visible:outline-indigo-500 dark:disabled:border-white/5 dark:disabled:bg-white/10 dark:disabled:checked:bg-white/10 forced-colors:appearance-auto" />
-            <svg viewBox="0 0 14 14" fill="none" class="pointer-events-none col-start-1 row-start-1 size-3.5 self-center justify-self-center stroke-white group-has-disabled:stroke-gray-950/25 dark:group-has-disabled:stroke-white/25">
-              <path d="M3 8L6 11L11 3.5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="opacity-0 group-has-checked:opacity-100" />
-              <path d="M3 7H11" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="opacity-0 group-has-indeterminate:opacity-100" />
-            </svg>
-          </div>
-        </div>
-        <div class="text-sm/6">
-          <label for="filter-law" class="font-medium text-gray-900 dark:text-white">Law</label>
-        </div>
-      </div>
-      <div class="flex gap-3">
-        <div class="flex h-6 shrink-0 items-center">
-          <div class="group grid size-4 grid-cols-1">
-            <input id="filter-oldRules" type="checkbox" name="filter-oldRules" value="oldRules" checked class="col-start-1 row-start-1 appearance-none rounded-sm border border-gray-300 bg-white checked:border-indigo-600 checked:bg-indigo-600 indeterminate:border-indigo-600 indeterminate:bg-indigo-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:border-gray-300 disabled:bg-gray-100 disabled:checked:bg-gray-100 dark:border-white/10 dark:bg-white/5 dark:checked:border-indigo-500 dark:checked:bg-indigo-500 dark:indeterminate:border-indigo-500 dark:indeterminate:bg-indigo-500 dark:focus-visible:outline-indigo-500 dark:disabled:border-white/5 dark:disabled:bg-white/10 dark:disabled:checked:bg-white/10 forced-colors:appearance-auto" />
-            <svg viewBox="0 0 14 14" fill="none" class="pointer-events-none col-start-1 row-start-1 size-3.5 self-center justify-self-center stroke-white group-has-disabled:stroke-gray-950/25 dark:group-has-disabled:stroke-white/25">
-              <path d="M3 8L6 11L11 3.5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="opacity-0 group-has-checked:opacity-100" />
-              <path d="M3 7H11" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="opacity-0 group-has-indeterminate:opacity-100" />
-            </svg>
-          </div>
-        </div>
-        <div class="text-sm/6">
-          <label for="filter-oldRules" class="font-medium text-gray-900 dark:text-white">Old Rules</label>
-        </div>
-      </div>
-      <div class="flex gap-3">
-        <div class="flex h-6 shrink-0 items-center">
-          <div class="group grid size-4 grid-cols-1">
-            <input id="filter-newRules" type="checkbox" name="filter-newRules" value="newRules" checked class="col-start-1 row-start-1 appearance-none rounded-sm border border-gray-300 bg-white checked:border-indigo-600 checked:bg-indigo-600 indeterminate:border-indigo-600 indeterminate:bg-indigo-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:border-gray-300 disabled:bg-gray-100 disabled:checked:bg-gray-100 dark:border-white/10 dark:bg-white/5 dark:checked:border-indigo-500 dark:checked:bg-indigo-500 dark:indeterminate:border-indigo-500 dark:indeterminate:bg-indigo-500 dark:focus-visible:outline-indigo-500 dark:disabled:border-white/5 dark:disabled:bg-white/10 dark:disabled:checked:bg-white/10 forced-colors:appearance-auto" />
-            <svg viewBox="0 0 14 14" fill="none" class="pointer-events-none col-start-1 row-start-1 size-3.5 self-center justify-self-center stroke-white group-has-disabled:stroke-gray-950/25 dark:group-has-disabled:stroke-white/25">
-              <path d="M3 8L6 11L11 3.5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="opacity-0 group-has-checked:opacity-100" />
-              <path d="M3 7H11" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="opacity-0 group-has-indeterminate:opacity-100" />
-            </svg>
-          </div>
-        </div>
-        <div class="text-sm/6">
-          <label for="filter-newRules" class="font-medium text-gray-900 dark:text-white">New Rules</label>
-        </div>
-      </div>
-    </div>
-  </fieldset>
-
-  <div>
-    <h3 class="text-sm font-semibold text-gray-900 dark:text-white mb-3">Tidigare frågor</h3>
-    <div id="chat-list" class="space-y-2"></div>
-  </div>
-</aside>
 
 `
 
@@ -145,7 +146,7 @@ function renderChatList() {
       <button
         class="w-full text-left px-3 py-2 rounded-md text-sm ${activeChat?.id === chat.id
         ? 'bg-indigo-600 text-white'
-        : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
+        : 'bg-white text-gray-900 hover:bg-gray-100'
       }"
         data-chat-id="${chat.id}"
       >
