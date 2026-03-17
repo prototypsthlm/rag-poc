@@ -262,6 +262,47 @@ modelSelectMobile?.addEventListener('change', () => {
   if (modelSelect) modelSelect.value = modelSelectMobile.value;
 });
 
+// Sync mobile and desktop checkboxes
+const filterLaw = document.querySelector<HTMLInputElement>('#filter-law');
+const filterLawMobile = document.querySelector<HTMLInputElement>('#filter-law-mobile');
+const filterOldRules = document.querySelector<HTMLInputElement>('#filter-oldRules');
+const filterOldRulesMobile = document.querySelector<HTMLInputElement>('#filter-oldRules-mobile');
+const filterNewRules = document.querySelector<HTMLInputElement>('#filter-newRules');
+const filterNewRulesMobile = document.querySelector<HTMLInputElement>('#filter-newRules-mobile');
+
+filterLaw?.addEventListener('change', () => {
+  if (filterLawMobile) filterLawMobile.checked = filterLaw.checked;
+});
+
+filterLawMobile?.addEventListener('change', () => {
+  if (filterLaw) filterLaw.checked = filterLawMobile.checked;
+});
+
+filterOldRules?.addEventListener('change', () => {
+  if (filterOldRulesMobile) filterOldRulesMobile.checked = filterOldRules.checked;
+});
+
+filterOldRulesMobile?.addEventListener('change', () => {
+  if (filterOldRules) filterOldRules.checked = filterOldRulesMobile.checked;
+});
+
+filterNewRules?.addEventListener('change', () => {
+  if (filterNewRulesMobile) filterNewRulesMobile.checked = filterNewRules.checked;
+});
+
+filterNewRulesMobile?.addEventListener('change', () => {
+  if (filterNewRules) filterNewRules.checked = filterNewRulesMobile.checked;
+});
+
+// Helper function to get selected groups (only from desktop checkboxes to avoid duplicates)
+function getSelectedGroups(): string[] {
+  const selectedGroups: string[] = [];
+  if (filterLaw?.checked) selectedGroups.push('law');
+  if (filterOldRules?.checked) selectedGroups.push('oldRules');
+  if (filterNewRules?.checked) selectedGroups.push('newRules');
+  return selectedGroups;
+}
+
 // Handle search form submission
 const searchForm = document.querySelector('form');
 const chatHistoryElement = document.querySelector<HTMLDivElement>('#chat-history');
@@ -358,13 +399,7 @@ searchForm?.addEventListener('submit', async (e) => {
     if (chatHistoryElement) chatHistoryElement.innerHTML = '<p class="text-gray-500 dark:text-gray-400">Laddar...</p>';
 
     // Get selected groups from checkboxes
-    const selectedGroups: string[] = [];
-    const checkboxes = document.querySelectorAll<HTMLInputElement>('input[type="checkbox"][id^="filter-"]');
-    checkboxes.forEach(checkbox => {
-      if (checkbox.checked) {
-        selectedGroups.push(checkbox.value);
-      }
-    });
+    const selectedGroups = getSelectedGroups();
 
     // Make API call
     const apiUrl = `${CONFIG.apiUrl}/${model}/chat/completions?api-version=${CONFIG.apiVersion}`;
@@ -401,13 +436,7 @@ searchForm?.addEventListener('submit', async (e) => {
 
 async function getResponse(query: string, apiUrl: string) {
   // Get selected groups from checkboxes
-  const selectedGroups: string[] = [];
-  const checkboxes = document.querySelectorAll<HTMLInputElement>('input[type="checkbox"][id^="filter-"]');
-  checkboxes.forEach(checkbox => {
-    if (checkbox.checked) {
-      selectedGroups.push(checkbox.value);
-    }
-  });
+  const selectedGroups = getSelectedGroups();
 
   // Build filter string
   const filterString = selectedGroups.length > 0
@@ -467,18 +496,33 @@ async function getResponseSections(query: string, searchApiUrl: string) {
   const indexApiUrl = "https://internal-rag-poc-ai-search.search.windows.net/indexes/rag-poc-w-metadata-2/docs/search?api-version=2024-03-01-preview";
 
   // Get selected groups from checkboxes
-  const selectedGroups: string[] = [];
-  const checkboxes = document.querySelectorAll<HTMLInputElement>('input[type="checkbox"][id^="filter-"]');
-  checkboxes.forEach(checkbox => {
-    if (checkbox.checked) {
-      selectedGroups.push(checkbox.value);
-    }
-  });
+  const selectedGroups = getSelectedGroups();
 
   const messages: any[] = [
     {
       "role": "system",
-      "content": "Answer using ONLY the provided sources. Structure the answer into sections. One section per data source",
+      "content": `You will receive a query and document contexts from specific regulatory groups. Provide your answer in sections based on the available groups.
+
+          ## Response Format
+
+          Structure your response using ONLY the sections for which you have been provided documents:
+
+          **Law:**
+          [Answer using ONLY documents from the Law group. Skip this section entirely if no Law documents were provided.]
+
+          **Old rules:**
+          [Answer using ONLY documents from the Old rules group. Skip this section entirely if no Old rules documents were provided.]
+
+          **New rules:**
+          [Answer using ONLY documents from the New rules group. Skip this section entirely if no New rules documents were provided.]
+
+          ## Important Rules
+
+          1. Each section must ONLY use information from documents belonging to that specific group
+          2. Do NOT combine information across groups within a single section
+          3. If you have no documents from a particular group, completely omit that section - do not include the heading
+          4. If none of the provided documents contain relevant information for a group, omit that section
+          5. Maintain the order: Law → Old rules → New rules (for sections that exist)`
     },
     {
       "role": "user",
